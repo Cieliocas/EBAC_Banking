@@ -1,4 +1,6 @@
 const form = document.getElementById('form-deposito');
+const NomeBeneficiario = document.getElementById('nome-beneficiario');
+let FormEValido = false;
 
 function ValidaNome(nomeCompleto) {
     const NomeComoArray = nomeCompleto.split(' ');
@@ -6,22 +8,35 @@ function ValidaNome(nomeCompleto) {
 }
 
 form.addEventListener('submit', function(e){
-    let FormEValido = false;
+
     e.preventDefault();
 
-    const NomeBeneficiario = document.getElementById('nome-beneficiario');
     const NumeroContaBeneficiario = document.getElementById('numero-conta');
     const ValorDeposito = document.getElementById('valor-deposito');
-    const MensagemSucesso = `Montante de: ${ValorDeposito.value} depositado para o cliente: ${NomeBeneficiario.value} - conta: ${NumeroContaBeneficiario.value}`;
+    const MensagemSucesso = `Montante de: <b>${ValorDeposito.value}</b> depositado para o cliente: <b>${NomeBeneficiario.value}</b> - conta: <b>${NumeroContaBeneficiario.value}</b>`;
     FormEValido = ValidaNome(NomeBeneficiario.value)
     if (FormEValido) {
-        alert(MensagemSucesso);
+        const containerMensagemSucesso = document.querySelector('.sucess-message');
+        containerMensagemSucesso = MensagemSucesso;
+        containerMensagemSucesso.style.display = 'block';
         NomeBeneficiario.value = '';
         NumeroContaBeneficiario.value = '';
         ValorDeposito.value = '';
     } else {
-        alert('O nome não está completo');
+        NomeBeneficiario.style.border = '1px solid red';
+        document.querySelector('.message-error').style.display = 'block';
     }
 }) 
 
-console.log(form);
+NomeBeneficiario.addEventListener('keyup', function(e) {
+    console.log(e.target.value);
+    FormEValido = ValidaNome(e.target.value);
+
+    if (!FormEValido) {
+        NomeBeneficiario.classList.add('error');
+        document.querySelector('.message-error').style.display = 'block';
+    } else {
+        NomeBeneficiario.classList.remove('error');
+        document.querySelector('.message-error').style.display = 'none';
+    }
+});
